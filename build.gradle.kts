@@ -83,11 +83,33 @@ ksp {
 
 // deployment and docker push to docker hub registry
 
-tasks.register<Exec>("tagAndPushImage") {
+tasks.register<Exec>("dockerTagLatest") {
+    group = "release"
+    dependsOn("dockerBuildNative")
+    commandLine("docker", "tag", "geo-city-api:latest", "beberhardt/geo-city-api:latest")
+}
+
+tasks.register<Exec>("dockerTagVersion") {
     group = "release"
     dependsOn("dockerBuildNative")
     commandLine("docker", "tag", "geo-city-api:latest", "beberhardt/geo-city-api:$version")
-    commandLine("docker", "push", "beberhardt/geo-city-api:$version")
-    commandLine("docker", "tag", "geo-city-api:latest", "beberhardt/geo-city-api:latest")
+}
+
+tasks.register<Exec>("dockerPushLatestImage") {
+    group = "release"
+    dependsOn("dockerTagLatest")
     commandLine("docker", "push", "beberhardt/geo-city-api:latest")
 }
+
+tasks.register<Exec>("dockerPushVersionedImage") {
+    group = "release"
+    dependsOn("dockerTagVersion")
+    commandLine("docker", "push", "beberhardt/geo-city-api:$version")
+}
+
+
+tasks.register("tagAndPushImages") {
+    group = "release"
+    dependsOn("dockerPushVersionedImage", "dockerPushLatestImage")
+}
+
