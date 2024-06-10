@@ -16,6 +16,12 @@ services:
       MYSQL_DATABASE: cities
       MYSQL_USER: cities
       MYSQL_PASSWORD: password
+    healthcheck:
+      test: out=$$(mysqladmin ping -h localhost -P 3306 -u root --password=$${MYSQL_ROOT_PASSWORD}); echo $$out | grep 'mysqld is alive' || { echo $$out; exit 1; }
+      timeout: 20s
+      retries: 10
+      start_interval: 5s
+      start_period: 5s
     volumes:
       - mysql:/var/lib/mysql
 
