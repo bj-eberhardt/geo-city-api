@@ -2,7 +2,7 @@ services:
   geo-city-api:
     image: geo-city-api:latest
     ports:
-      - 15000:8080
+      - 15000:8080 # exposed to localhost:15000
     environment:
       DB_USERNAME: cities
       DB_PASSWORD: password
