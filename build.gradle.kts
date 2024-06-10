@@ -12,7 +12,8 @@ plugins {
 version = "0.1"
 group = "city.db"
 
-val kotlinVersion = project.properties.get("kotlinVersion")
+val kotlinVersion = project.properties["kotlinVersion"]
+
 repositories {
     mavenCentral()
 }
@@ -61,8 +62,6 @@ micronaut {
         additionalModules.add("jdbc-postgresql")
     }
     aot {
-        // Please review carefully the optimizations enabled below
-        // Check https://micronaut-projects.github.io/micronaut-aot/latest/guide/ for more details
         optimizeServiceLoading = false
         convertYamlToJava = false
         precomputeOperations = true
@@ -80,4 +79,15 @@ tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("dockerfileNative"
 
 ksp {
     arg("micronaut.openapi.project.dir", projectDir.toString())
+}
+
+// deployment and docker push to docker hub registry
+
+tasks.register<Exec>("tagAndPushImage") {
+    group = "release"
+    dependsOn("dockerBuildNative")
+    commandLine("docker", "tag", "geo-city-api:latest", "beberhardt/geo-city-api:$version")
+    commandLine("docker", "push", "beberhardt/geo-city-api:$version")
+    commandLine("docker", "tag", "geo-city-api:latest", "beberhardt/geo-city-api:latest")
+    commandLine("docker", "push", "beberhardt/geo-city-api:latest")
 }
