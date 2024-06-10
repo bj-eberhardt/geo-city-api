@@ -8,7 +8,8 @@ services:
       DB_PASSWORD: password
       JDBC_SOURCE: jdbc:mysql://mysql:3306/cities #cities is the database name
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
   mysql:
     image: mysql:8.0
     environment:
