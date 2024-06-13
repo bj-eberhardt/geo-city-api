@@ -107,9 +107,7 @@ tasks.register<Exec>("dockerPushVersionedImage") {
     commandLine("docker", "push", "beberhardt/geo-city-api:$version")
 }
 
-
 tasks.register("tagAndPushImages") {
     group = "release"
     dependsOn("dockerPushVersionedImage", "dockerPushLatestImage")
 }
-

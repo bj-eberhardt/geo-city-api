@@ -1,8 +1,10 @@
 # Cities API
 
-Offers an API to get from a known location (geo: lat, lng) the nearest cities.
+Offers an API to get from a known location (geo: lat, lng) the nearest cities without
+need of any remote webservice or internet connection.
 
 It's using the cities database from: https://github.com/dr5hn/countries-states-cities-database/
+If you need a more precise database, checkout [geonames-api](https://github.com/bj-eberhardt/geonames-api)
 
 
 ## Development
