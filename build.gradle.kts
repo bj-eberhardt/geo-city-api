@@ -1,5 +1,3 @@
-import java.util.regex.Pattern
-
 plugins {
     id("org.jetbrains.kotlin.jvm") version "1.9.23"
     id("org.jetbrains.kotlin.plugin.allopen") version "1.9.23"
@@ -122,24 +120,26 @@ tasks.register("incrementVersion") {
         println(":incrementVersion - Incrementing Version...")
         val buildGradleFile = file("gradle.properties")
         val lines = buildGradleFile.readLines()
-        val changedLines = lines.map {
-            if (it.startsWith("version=", true)) {
-                println("current $it")
-                val versionParts = it.split(".")
-                val newVersion = versionParts.mapIndexed { index, part ->
-                    if (index != versionParts.size-1) {
-                        part
-                    } else {
-                        part.toInt()+1
-                    }
+        val changedLines =
+            lines.map {
+                if (it.startsWith("version=", true)) {
+                    println("current $it")
+                    val versionParts = it.split(".")
+                    val newVersion =
+                        versionParts.mapIndexed { index, part ->
+                            if (index != versionParts.size - 1) {
+                                part
+                            } else {
+                                part.toInt() + 1
+                            }
+                        }
+                    val versionText = newVersion.joinToString(".")
+                    println("new $versionText")
+                    versionText
+                } else {
+                    it
                 }
-                val versionText =newVersion.joinToString(".")
-                println("new $versionText")
-                versionText
-            } else {
-                it
             }
-        }
         buildGradleFile.writeText(changedLines.joinToString("\n"))
     }
 }
