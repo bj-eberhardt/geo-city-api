@@ -7,8 +7,6 @@ on:
   # Triggers the workflow on push or pull request events but only for the "master" branch
   push:
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -37,7 +35,20 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}   
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
+        
+      - name: increment version
+        run: ./gradlew incrementVersion
+
+         # Commit version change back to repository
+      - name: Commit version change
+        if: github.ref == 'refs/heads/master'
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          git add gradle.properties
+          git commit -m 'Increment version [skip ci]'
+          git push origin master
+        
+      - name: build the docker image and push it
         run: ./gradlew clean build tagAndPushImages
 
