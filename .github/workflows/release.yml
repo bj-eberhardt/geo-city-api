@@ -27,6 +27,8 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
 
       - name: Setup Java JDK
         uses: actions/setup-java@v4.2.1
@@ -50,6 +52,7 @@ jobs:
         with:
            commit_message: Increment version [skip ci]
            file_pattern: 'gradle.properties'
+           push_options: --force
         
       - name: build the docker image and push it
         run: ./gradlew clean build tagAndPushImages
