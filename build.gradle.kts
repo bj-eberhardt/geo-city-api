@@ -41,6 +41,9 @@ dependencies {
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
     runtimeOnly("com.mysql:mysql-connector-j")
     runtimeOnly("org.flywaydb:flyway-mysql")
+
+    testImplementation("org.testcontainers:mysql:1.18.3")
+    testImplementation("org.testcontainers:testcontainers")
 }
 
 application {
