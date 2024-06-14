@@ -1,3 +1,5 @@
+import java.util.regex.Pattern
+
 plugins {
     id("org.jetbrains.kotlin.jvm") version "1.9.23"
     id("org.jetbrains.kotlin.plugin.allopen") version "1.9.23"
@@ -9,7 +11,6 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
 }
 
-version = "0.1"
 group = "city.db"
 
 val kotlinVersion = project.properties["kotlinVersion"]
@@ -113,4 +114,26 @@ tasks.register<Exec>("dockerPushVersionedImage") {
 tasks.register("tagAndPushImages") {
     group = "release"
     dependsOn("dockerPushVersionedImage", "dockerPushLatestImage")
+}
+
+tasks.register("incrementVersion") {
+    group = "release"
+    doLast {
+        println(":incrementVersionCode - Incrementing Version Code...")
+        val buildGradleFile = file("gradle.properties")
+        val patternVersionCode = Pattern.compile("version=(\\d+)")
+        val buildGradleFileText = buildGradleFile.readText()
+        val matcherVersionCode = patternVersionCode.matcher(buildGradleFileText)
+
+        if (matcherVersionCode.find()) {
+            val mVersionCode = matcherVersionCode.group(1)?.toInt() ?: 0
+            val mNextVersionCode = mVersionCode + 1
+            val manifestContent = matcherVersionCode.replaceAll("version=$mNextVersionCode")
+
+            println(":incrementVersionCode - current version=$mVersionCode")
+            println(":incrementVersionCode - next version=$mNextVersionCode")
+
+            buildGradleFile.writeText(manifestContent)
+        }
+    }
 }
