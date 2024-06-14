@@ -38,3 +38,8 @@ Use the docker compose file in  [city-api-stack](city-api-stack/docker-compose.y
 It creates a new stack exposing the api on http://127.0.0.1.15000/ and also starts a mysql database.
 
 
+
+
+## License
+
+Open Data Commons Open Database License v1.0
