@@ -27,6 +27,9 @@ jobs:
 
       - name: Setup Java JDK
         uses: actions/setup-java@v4.2.1
+        with:
+          distribution: 'oracle' # Install Java from Eclipse Temurin (AdoptOpenJDK)
+          java-version: '21' # Specify the Java version you need
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
