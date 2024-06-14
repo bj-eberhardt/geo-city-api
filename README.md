@@ -35,5 +35,11 @@ It's creating a docker image named: _geo-city-api:latest_
 ## Deploying
 
 Use the docker compose file in  [city-api-stack](city-api-stack/docker-compose.yml).
+
 It creates a new stack exposing the api on http://127.0.0.1.15000/ and also starts a mysql database
  that imports the needed data on first run.
+
+
+## License
+
+Open Data Commons Open Database License v1.0
