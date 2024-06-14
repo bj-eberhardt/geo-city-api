@@ -119,21 +119,27 @@ tasks.register("tagAndPushImages") {
 tasks.register("incrementVersion") {
     group = "release"
     doLast {
-        println(":incrementVersionCode - Incrementing Version Code...")
+        println(":incrementVersion - Incrementing Version...")
         val buildGradleFile = file("gradle.properties")
-        val patternVersionCode = Pattern.compile("version=(\\d+)")
-        val buildGradleFileText = buildGradleFile.readText()
-        val matcherVersionCode = patternVersionCode.matcher(buildGradleFileText)
-
-        if (matcherVersionCode.find()) {
-            val mVersionCode = matcherVersionCode.group(1)?.toInt() ?: 0
-            val mNextVersionCode = mVersionCode + 1
-            val manifestContent = matcherVersionCode.replaceAll("version=$mNextVersionCode")
-
-            println(":incrementVersionCode - current version=$mVersionCode")
-            println(":incrementVersionCode - next version=$mNextVersionCode")
-
-            buildGradleFile.writeText(manifestContent)
+        val lines = buildGradleFile.readLines()
+        val changedLines = lines.map {
+            if (it.startsWith("version=", true)) {
+                println("current $it")
+                val versionParts = it.split(".")
+                val newVersion = versionParts.mapIndexed { index, part ->
+                    if (index != versionParts.size-1) {
+                        part
+                    } else {
+                        part.toInt()+1
+                    }
+                }
+                val versionText =newVersion.joinToString(".")
+                println("new $versionText")
+                versionText
+            } else {
+                it
+            }
         }
+        buildGradleFile.writeText(changedLines.joinToString("\n"))
     }
 }
