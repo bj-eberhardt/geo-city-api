@@ -31,7 +31,13 @@ jobs:
           distribution: 'oracle' # Install Java from Eclipse Temurin (AdoptOpenJDK)
           java-version: '21' # Specify the Java version you need
 
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}   
+
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: ./gradlew clean build
+        run: ./gradlew clean build tagAndPushImages
 
